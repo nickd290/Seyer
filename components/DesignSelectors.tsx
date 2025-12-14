@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Palette, Sun, Armchair, Layers } from 'lucide-react';
+import { Sparkles, Leaf, Sun, Palette } from 'lucide-react';
 import { DesignPreferences } from '../types';
 
 interface DesignSelectorsProps {
@@ -7,34 +8,56 @@ interface DesignSelectorsProps {
   onChange: (prefs: DesignPreferences) => void;
 }
 
-const STYLES = [
-  { id: 'Modern Minimalist', label: 'Minimalist', bg: 'bg-zinc-200' },
-  { id: 'Industrial Loft', label: 'Industrial', bg: 'bg-stone-600' },
-  { id: 'Scandinavian', label: 'Scandi', bg: 'bg-orange-100' },
-  { id: 'Mid-Century Modern', label: 'Mid-Century', bg: 'bg-amber-700' },
-  { id: 'Luxury Contemporary', label: 'Luxury', bg: 'bg-zinc-900' },
-  { id: 'Biophilic (Nature)', label: 'Biophilic', bg: 'bg-emerald-800' },
+// 1. MOOD (Replaces "Architectural Style")
+const MOODS = [
+  { 
+    id: 'Cozy & Intimate', 
+    desc: 'Warm, soft, and inviting. Great for relaxation.',
+    color: 'bg-orange-900/40 border-orange-700/50'
+  },
+  { 
+    id: 'Bright & Airy', 
+    desc: 'Open, spacious, and full of light. Energetic feel.',
+    color: 'bg-sky-900/40 border-sky-700/50'
+  },
+  { 
+    id: 'Sleek & Modern', 
+    desc: 'Clean lines, minimal clutter, sophisticated.',
+    color: 'bg-zinc-800/60 border-zinc-600/50'
+  },
+  { 
+    id: 'Bold & Dramatic', 
+    desc: 'High contrast, rich colors, statement pieces.',
+    color: 'bg-purple-900/40 border-purple-700/50'
+  },
+  { 
+    id: 'Rustic & Natural', 
+    desc: 'Earthy, organic, and grounded. Biophilic.',
+    color: 'bg-emerald-900/40 border-emerald-700/50'
+  }
 ];
 
-const PALETTES = [
-  { id: 'Warm Neutrals', label: 'Warm Neutrals', colors: ['#f5f5f5', '#e5e5e5', '#d4d4d4'] },
-  { id: 'Dark & Moody', label: 'Dark & Moody', colors: ['#18181b', '#27272a', '#3f3f46'] },
-  { id: 'Cool Greys', label: 'Cool Greys', colors: ['#f1f5f9', '#cbd5e1', '#64748b'] },
-  { id: 'Earthy Tones', label: 'Earthy', colors: ['#78350f', '#b45309', '#fcd34d'] },
+// 2. MATERIALS (Replaces generic Flooring/Material lists)
+const MATERIALS = [
+  { id: 'Natural (Wood & Stone)', label: 'Natural & Organic' },
+  { id: 'Polished (Glass & Metal)', label: 'Sleek & Shiny' },
+  { id: 'Soft (Fabric & Carpet)', label: 'Soft & Plush' },
+  { id: 'Industrial (Concrete & Steel)', label: 'Raw & Industrial' },
 ];
 
+// 3. COLORS (Simplified Palettes)
+const COLORS = [
+  { id: 'Warm Earth Tones', label: 'Warm Earth (Beige/Brown)' },
+  { id: 'Bright Neutrals', label: 'Light Neutrals (White/Cream)' },
+  { id: 'Cool Greys & Blues', label: 'Cool Tones (Grey/Blue)' },
+  { id: 'Dark & Rich', label: 'Dark & Moody (Black/Navy)' },
+];
+
+// 4. LIGHTING
 const LIGHTING = [
-  { id: 'Natural Daylight', label: 'Daylight (Bright)' },
-  { id: 'Warm Evening', label: 'Evening (Cozy)' },
-  { id: 'Studio Professional', label: 'Studio (Balanced)' },
-  { id: 'Cinematic', label: 'Cinematic (Dramatic)' },
-];
-
-const FLOORING = [
-  { id: 'Light Oak Wood', label: 'Light Oak' },
-  { id: 'Dark Walnut Wood', label: 'Dark Walnut' },
-  { id: 'Polished Concrete', label: 'Concrete' },
-  { id: 'Marble / Stone', label: 'Marble/Stone' },
+  { id: 'Natural Daylight', label: 'Bright Daylight' },
+  { id: 'Warm Evening', label: 'Cozy Evening' },
+  { id: 'Soft Ambient', label: 'Soft Ambient' },
 ];
 
 const DesignSelectors: React.FC<DesignSelectorsProps> = ({ preferences, onChange }) => {
@@ -44,108 +67,110 @@ const DesignSelectors: React.FC<DesignSelectorsProps> = ({ preferences, onChange
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       
-      {/* STYLE */}
+      {/* SECTION 1: MOOD (The most important choice) */}
       <div>
-        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-          <Armchair size={14} /> Architectural Style
+        <label className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+          <Sparkles size={16} className="text-yellow-500" /> How should this room feel?
         </label>
-        <div className="grid grid-cols-3 gap-2">
-          {STYLES.map((s) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {MOODS.map((m) => (
             <button
-              key={s.id}
-              onClick={() => update('style', s.id)}
+              key={m.id}
+              onClick={() => update('mood', m.id)}
               className={`
-                h-12 rounded-lg text-xs font-medium transition-all relative overflow-hidden group
-                ${preferences.style === s.id 
-                  ? 'ring-2 ring-indigo-500 ring-offset-2 ring-offset-zinc-900 text-white bg-zinc-800' 
-                  : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800'
+                text-left p-4 rounded-xl border transition-all duration-200 relative overflow-hidden group
+                ${preferences.mood === m.id 
+                  ? `ring-2 ring-indigo-500 ${m.color} bg-opacity-100` 
+                  : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600'
                 }
               `}
             >
-              <div className={`absolute inset-0 opacity-10 ${s.bg}`} />
-              <span className="relative z-10">{s.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* PALETTE */}
-      <div>
-        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-          <Palette size={14} /> Color Palette
-        </label>
-        <div className="grid grid-cols-2 gap-2">
-          {PALETTES.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => update('palette', p.id)}
-              className={`
-                flex items-center gap-3 p-2 rounded-lg transition-all
-                ${preferences.palette === p.id 
-                  ? 'bg-zinc-800 ring-1 ring-indigo-500/50' 
-                  : 'bg-zinc-900/50 hover:bg-zinc-800'
-                }
-              `}
-            >
-              <div className="flex -space-x-1">
-                {p.colors.map((c, i) => (
-                  <div key={i} className="w-4 h-4 rounded-full ring-1 ring-black/20" style={{ backgroundColor: c }} />
-                ))}
+              <div className="relative z-10">
+                <div className="font-bold text-white text-sm mb-1">{m.id}</div>
+                <div className="text-xs text-zinc-400 group-hover:text-zinc-300">{m.desc}</div>
               </div>
-              <span className={`text-xs ${preferences.palette === p.id ? 'text-white' : 'text-zinc-400'}`}>
-                {p.label}
-              </span>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        {/* LIGHTING */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* SECTION 2: MATERIALS */}
         <div>
           <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Sun size={14} /> Lighting
+            <Leaf size={14} /> Preferred Textures
           </label>
-          <div className="space-y-1">
-            {LIGHTING.map((l) => (
+          <div className="space-y-2">
+            {MATERIALS.map((m) => (
               <button
-                key={l.id}
-                onClick={() => update('lighting', l.id)}
+                key={m.id}
+                onClick={() => update('materials', m.id)}
                 className={`
-                  w-full text-left px-3 py-2 rounded-md text-xs transition-colors
-                  ${preferences.lighting === l.id ? 'bg-indigo-600 text-white' : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800'}
+                  w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all
+                  ${preferences.materials === m.id 
+                    ? 'bg-zinc-800 text-white border border-zinc-600 shadow-lg' 
+                    : 'bg-zinc-900/50 text-zinc-400 border border-transparent hover:bg-zinc-800'
+                  }
                 `}
               >
-                {l.label}
+                {m.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* FLOORING */}
-        <div>
-          <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Layers size={14} /> Flooring
-          </label>
-          <div className="space-y-1">
-            {FLOORING.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => update('flooring', f.id)}
-                className={`
-                  w-full text-left px-3 py-2 rounded-md text-xs transition-colors
-                  ${preferences.flooring === f.id ? 'bg-indigo-600 text-white' : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800'}
-                `}
-              >
-                {f.label}
-              </button>
-            ))}
+        <div className="space-y-6">
+          {/* SECTION 3: COLORS */}
+          <div>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <Palette size={14} /> Color Theme
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {COLORS.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => update('colors', c.id)}
+                  className={`
+                    px-3 py-2 rounded-lg text-xs font-medium transition-all border
+                    ${preferences.colors === c.id 
+                      ? 'bg-zinc-800 text-white border-zinc-500' 
+                      : 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-700'
+                    }
+                  `}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SECTION 4: LIGHTING */}
+          <div>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <Sun size={14} /> Lighting
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {LIGHTING.map((l) => (
+                <button
+                  key={l.id}
+                  onClick={() => update('lighting', l.id)}
+                  className={`
+                    px-3 py-2 rounded-full text-xs font-medium transition-all
+                    ${preferences.lighting === l.id 
+                      ? 'bg-indigo-600 text-white' 
+                      : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'
+                    }
+                  `}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 };
